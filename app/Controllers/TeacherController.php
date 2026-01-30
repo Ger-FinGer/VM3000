@@ -3,9 +3,7 @@ class TeacherController
 {
     public static function landing(): void
     {
-        $pdo = db();
-        $weeks = $pdo->query('SELECT name, slug FROM project_weeks ORDER BY id DESC')->fetchAll();
-        render('landing', ['weeks' => $weeks]);
+        render('landing');
     }
 
     public static function handle(string $slug): void

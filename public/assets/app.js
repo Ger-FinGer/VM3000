@@ -8,15 +8,4 @@ document.addEventListener('DOMContentLoaded', () => {
         homeroomSelect.addEventListener('change', toggle);
         toggle();
     }
-
-    const loginForm = document.querySelector('[data-login-form]');
-    const slugSelect = document.querySelector('[data-slug-select]');
-    if (loginForm && slugSelect) {
-        const updateAction = () => {
-            const slug = slugSelect.value || '';
-            loginForm.setAttribute('action', '/' + slug);
-        };
-        slugSelect.addEventListener('change', updateAction);
-        updateAction();
-    }
 });
