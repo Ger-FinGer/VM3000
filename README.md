@@ -7,7 +7,7 @@ Single-school MVP for planning Projekt-/Vorhabenswochen.
 1. Create database `vm3000` in phpMyAdmin (utf8mb4).
 2. Import `sql/schema.sql`.
 3. Copy `.env.php.example` to `.env.php` and configure DB credentials.
-4. Point your web server document root to `/public` (e.g., XAMPP Apache).
+4. Point your web server document root to `/public` (e.g., XAMPP Apache) and enable `mod_rewrite` so `/admin/login` and `/TSS` routes resolve correctly.
 5. Open landing page: `http://localhost/`.
 6. Teacher page example: `http://localhost/TSS`.
 7. After upgrades, do a hard reload in the browser to pick up new assets (Ctrl+Shift+R / Cmd+Shift+R).
