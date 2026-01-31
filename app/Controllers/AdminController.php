@@ -46,15 +46,28 @@ class AdminController
             $name = trim($_POST['name'] ?? '');
             $action = $_POST['action'] ?? '';
             if ($action === 'create' && $name !== '') {
-                $stmt = $pdo->prepare('INSERT INTO rooms (name) VALUES (?)');
+                $stmt = $pdo->prepare('INSERT INTO rooms (name, active, created_at) VALUES (?, 1, NOW())');
                 $stmt->execute([$name]);
                 flash('success', 'Room created.');
             }
             if ($action === 'delete') {
                 $id = (int)($_POST['id'] ?? 0);
+                $check = $pdo->prepare('SELECT COUNT(*) FROM slot_rooms WHERE room_id = ?');
+                $check->execute([$id]);
+                if ((int)$check->fetchColumn() > 0) {
+                    flash('error', 'Room is reserved and cannot be deleted.');
+                    redirect('/admin/rooms');
+                }
                 $stmt = $pdo->prepare('DELETE FROM rooms WHERE id = ?');
                 $stmt->execute([$id]);
                 flash('success', 'Room deleted.');
+            }
+            if ($action === 'toggle') {
+                $id = (int)($_POST['id'] ?? 0);
+                $active = (int)($_POST['active'] ?? 0);
+                $stmt = $pdo->prepare('UPDATE rooms SET active = ? WHERE id = ?');
+                $stmt->execute([$active ? 1 : 0, $id]);
+                flash('success', 'Room updated.');
             }
             redirect('/admin/rooms');
         }
