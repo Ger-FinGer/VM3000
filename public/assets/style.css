@@ -4,3 +4,30 @@
     padding: 6px;
     margin-bottom: 6px;
 }
+
+.slot {
+    min-width: 140px;
+    cursor: pointer;
+    vertical-align: top;
+}
+
+.slot-free {
+    background-color: #f9fafb;
+}
+
+.slot-mine {
+    background-color: #d1e7dd;
+}
+
+.slot-taken {
+    background-color: #f8d7da;
+}
+
+.slot-busy {
+    background-color: #fff3cd;
+    cursor: not-allowed;
+}
+
+#slot-participants .list-group-item {
+    padding: 0.5rem 0.75rem;
+}

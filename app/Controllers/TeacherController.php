@@ -141,55 +141,20 @@ class TeacherController
     private static function timetable(array $week, int $teacherId): void
     {
         $pdo = db();
-        $classOverviewId = (int)($_GET['class_id'] ?? 0);
-        $daysStmt = $pdo->prepare('SELECT * FROM project_week_days WHERE project_week_id = ? ORDER BY day_date');
+        $daysStmt = $pdo->prepare('SELECT id, day_date FROM project_week_days WHERE project_week_id = ? ORDER BY day_date');
         $daysStmt->execute([$week['id']]);
         $days = $daysStmt->fetchAll();
         $classes = $pdo->query('SELECT * FROM classes ORDER BY name')->fetchAll();
-        $rooms = $pdo->query('SELECT * FROM rooms ORDER BY name')->fetchAll();
-
-        $bookingStmt = $pdo->prepare('SELECT b.*, c.name AS class_name, r.name AS room_name FROM bookings b JOIN classes c ON b.class_id = c.id LEFT JOIN rooms r ON b.room_id = r.id WHERE b.project_week_day_id IN (SELECT id FROM project_week_days WHERE project_week_id = ?)');
-        $bookingStmt->execute([$week['id']]);
-        $bookings = $bookingStmt->fetchAll();
-
-        $bookingTeachersStmt = $pdo->prepare('SELECT t.initials FROM booking_teachers bt JOIN teachers t ON bt.teacher_id = t.id WHERE bt.booking_id = ? ORDER BY t.initials');
-        $bookingTeachers = [];
-        foreach ($bookings as $booking) {
-            $bookingTeachersStmt->execute([$booking['id']]);
-            $bookingTeachers[$booking['id']] = array_column($bookingTeachersStmt->fetchAll(), 'initials');
-        }
 
         $profileStmt = $pdo->prepare('SELECT * FROM week_teacher_profiles WHERE project_week_id = ? AND teacher_id = ?');
         $profileStmt->execute([$week['id'], $teacherId]);
         $profile = $profileStmt->fetch();
 
-        $absentStmt = $pdo->prepare('SELECT project_week_day_id FROM teacher_day_status WHERE project_week_id = ? AND teacher_id = ?');
-        $absentStmt->execute([$week['id'], $teacherId]);
-        $absentDays = array_column($absentStmt->fetchAll(), 'project_week_day_id');
-
-        $classTripsStmt = $pdo->prepare('SELECT * FROM class_day_status WHERE project_week_id = ?');
-        $classTripsStmt->execute([$week['id']]);
-        $classTrips = $classTripsStmt->fetchAll();
-
-        $classOverviewBookings = [];
-        if ($classOverviewId) {
-            $stmt = $pdo->prepare('SELECT b.*, d.day_date, r.name AS room_name FROM bookings b JOIN project_week_days d ON b.project_week_day_id = d.id LEFT JOIN rooms r ON b.room_id = r.id WHERE b.class_id = ? AND d.project_week_id = ?');
-            $stmt->execute([$classOverviewId, $week['id']]);
-            $classOverviewBookings = $stmt->fetchAll();
-        }
-
-        render('teacher/timetable', [
+        render('teacher/dashboard', [
             'week' => $week,
             'days' => $days,
             'classes' => $classes,
-            'rooms' => $rooms,
-            'bookings' => $bookings,
-            'bookingTeachers' => $bookingTeachers,
             'profile' => $profile,
-            'absentDays' => $absentDays,
-            'classTrips' => $classTrips,
-            'classOverviewId' => $classOverviewId,
-            'classOverviewBookings' => $classOverviewBookings,
         ]);
     }
 

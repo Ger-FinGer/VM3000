@@ -10,6 +10,13 @@ Single-school MVP for planning Projekt-/Vorhabenswochen.
 4. Point your web server document root to `/public` (e.g., XAMPP Apache).
 5. Open landing page: `http://localhost/`.
 6. Teacher page example: `http://localhost/TSS`.
+7. After upgrades, do a hard reload in the browser to pick up new assets (Ctrl+Shift+R / Cmd+Shift+R).
+
+## Upgrade to 3.0
+
+1. Back up your database.
+2. Run `sql/upgrade_3_0.sql` on the existing database.
+3. Deploy the updated code and perform a hard reload in the browser.
 
 ## Seeded credentials
 
