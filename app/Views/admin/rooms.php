@@ -12,11 +12,22 @@
     </div>
 </form>
 <table class="table">
-    <thead><tr><th>Name</th><th>Aktion</th></tr></thead>
+    <thead><tr><th>Name</th><th>Status</th><th>Aktion</th></tr></thead>
     <tbody>
     <?php foreach ($rooms as $room): ?>
         <tr>
             <td><?php echo e($room['name']); ?></td>
+            <td>
+                <form method="post" class="d-inline">
+                    <?php echo csrf_field(); ?>
+                    <input type="hidden" name="action" value="toggle">
+                    <input type="hidden" name="id" value="<?php echo e((string)$room['id']); ?>">
+                    <input type="hidden" name="active" value="<?php echo $room['active'] ? '0' : '1'; ?>">
+                    <button class="btn btn-sm <?php echo $room['active'] ? 'btn-outline-success' : 'btn-outline-secondary'; ?>">
+                        <?php echo $room['active'] ? 'Aktiv' : 'Inaktiv'; ?>
+                    </button>
+                </form>
+            </td>
             <td>
                 <form method="post" class="d-inline">
                     <?php echo csrf_field(); ?>
